@@ -1,0 +1,96 @@
+@SolidFireGateway_HostAddress = https://win25:5000
+
+# Pre-populated HTTP request templates for all controllers
+
+### Cluster Info
+GET {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/clusterinfo
+
+### List Volumes (via SolidFireController)
+GET {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/listvolumesforaccount?accountID={{tenantID}}
+
+### List Volumes For Account (VolumesController)
+GET {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/volumes/foraccount?accountID={{tenantID}}
+
+### Create Volume
+POST {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/volumes
+Content-Type: application/json
+
+{
+  "accountID": {{tenantID}},
+  "name": "newVolumeName",
+  "totalSize": 10737418240,
+  "qos": { "minIOPS": 100, "maxIOPS": 1000 },
+  "attributes": { "accountID": {{tenantID}} }
+}
+
+### Delete Volume
+DELETE {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/volumes/{{volumeID}}
+
+### Purge Volume
+POST {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/volumes/purge
+Content-Type: application/json
+
+{ "volumeID": {{volumeID}} }
+
+### Volume Access Groups
+GET {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/volumeaccessgroups
+
+### Add Volumes To Group
+POST {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/volumeaccessgroups/{{groupID}}/volumes
+Content-Type: application/json
+
+{ "volumes": [{{volumeID1}}, {{volumeID2}}] }
+
+### Remove Volumes From Group
+DELETE {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/volumeaccessgroups/{{groupID}}/volumes
+Content-Type: application/json
+
+{ "volumes": [{{volumeID1}}] }
+
+### QoS Policies - List
+GET {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/qospolicies
+
+### QoS Policies - Get
+GET {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/qospolicies/{{policyID}}
+
+### QoS Policies - Modify
+PUT {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/qospolicies/{{policyID}}
+Content-Type: application/json
+
+{ "minIOPS": 200, "maxIOPS": 2000 }
+
+### QoS Policies - Delete
+DELETE {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/qospolicies/{{policyID}}
+
+### Snapshots - Create
+POST {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/snapshots
+Content-Type: application/json
+
+{ "volumeID": {{volumeID}}, "name": "snapName", "retention": "01:00:00" }
+
+### Group Snapshots - Create
+POST {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/snapshots/group
+Content-Type: application/json
+
+{ "volumes": [{{volumeID1}}, {{volumeID2}}], "name": "groupSnap", "retention": "01:00:00" }
+
+### Group Snapshots - List
+POST {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/snapshots/group/list
+
+### Snapshots - List
+POST {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/snapshots/list
+Content-Type: application/json
+
+{ "volumeID": {{volumeID}} }
+
+### Account Efficiency
+GET {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/accounts/efficiency?accountID={{tenantID}}
+
+### Account Volume Stats
+GET {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/accounts/volumestats?accountID={{tenantID}}
+
+### Cluster Stats - Capacity
+GET {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/clusterstats/capacity
+
+### Cluster Stats - Performance
+GET {{SolidFireGateway_HostAddress}}/SolidFire/{{cluster}}/clusterstats/performance
